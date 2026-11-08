@@ -6,12 +6,13 @@ Open **GPU Comparison** in the sidebar. Each card gets its own column, labeled w
 
 ## Read the view
 
+- Each GPU has a distinct chart color; model and PCI labels also identify it.
 - **Total Usage** shows how busy each GPU is; both usage charts use the normal 0–100% scale.
 - **Video Memory Usage** shows used and total memory. Compare the printed amounts as well as the percentage: 50% of a 6 GB card differs from 50% of a 12 GB card.
-- **Power Usage** and **Temperature** help distinguish active compute from storage/offloading. Temperature graphs retain Resources' own automatic scale; compare their numeric readings rather than their graph heights.
+- **Power Usage** and **Temperature** help distinguish active compute from storage/offloading. Both temperature graphs share a 0–100°C range, expanding together if a recorded reading exceeds 100°C. Equal temperatures now have equal graph heights; labels still honor your temperature-unit preference.
 - **Details**, further down each column, include the vendor, driver, PCI slot and link information available to Resources.
 
-The comparison omits video encoder/decoder graphs and frequency rows to keep usage, memory, power and temperature together. Those fields remain in each original GPU page. Scroll each column vertically for more detail; on narrow windows, scroll the whole comparison horizontally. Widen the window for an easier comparison.
+The comparison omits video encoder/decoder graphs and frequency rows to keep usage, memory, power and temperature together. Those fields remain in each original GPU page. Scroll either column vertically to move all cards together and keep corresponding rows aligned. On narrow windows, scroll the whole comparison horizontally. Widen the window for an easier comparison.
 
 An idle donor GPU can hold model weights without showing high utilization. This view reports activity; it neither chooses the compute GPU nor assigns AI offloading roles. GPU 1/GPU 2 are Resources labels, not guaranteed CUDA indices. Use model names and PCI addresses to identify cards. Missing readings keep upstream Resources' N/A handling.
 
@@ -50,15 +51,15 @@ A documentation helper captures only this application's rendered window, not the
 ```sh
 GSETTINGS_SCHEMA_DIR="$PWD/local-install/share/glib-2.0/schemas" \
 RESOURCES_CAPTURE_PATH="$PWD/docs/screenshots/gpu-comparison.png" \
-GSK_RENDERER=cairo \
+RESOURCES_CAPTURE_VERIFY=1 GSK_RENDERER=cairo \
 ./build/src/debug/resources-capture --open-tab-id gpu-comparison -p -d -n -b -c -m -v
 ```
 
-It opens the real comparison UI, waits for live readings, saves a PNG and exits. A graphical session is required. `-p` hides process/app monitoring for screenshot privacy; the other switches hide unrelated devices. The helper has no GPU-setting or process-control actions. It uses a 1550×1100 window so details are readable.
+It opens the real comparison UI, checks synchronized scrolling, the shared temperature range and distinct colors, waits for live readings, saves a PNG and exits. Omit RESOURCES_CAPTURE_VERIFY when capturing an individual GPU page. A graphical session is required. `-p` hides process/app monitoring for screenshot privacy; the other switches hide unrelated devices. The helper has no GPU-setting or process-control actions. It uses a 1550×1100 window so details are readable.
 
 ## Limitations
 
-Only an RTX 3060 / GTX 1660 pair has been visually exercised for this fork. Single-GPU systems retain their normal page and do not show comparison. More than two GPUs scroll horizontally. GPU hotplug/reordering during a session is not newly supported; restart the app after a hardware change. Polling frequency, sensor behavior, graph history, temperature scaling and existing per-GPU pages come from upstream Resources.
+Only an RTX 3060 / GTX 1660 pair has been visually exercised for this fork. Single-GPU systems retain their normal page and do not show comparison. More than two GPUs scroll horizontally. GPU hotplug/reordering during a session is not newly supported; restart the app after a hardware change. Polling frequency, sensor behavior, graph history and existing per-GPU pages come from upstream Resources. Only comparison temperature charts use the shared range; individual pages retain their original automatic scaling.
 
 This is an independent GPL-3.0-or-later fork, not an official upstream release. Upstream development now lives at [GNOME GitLab](https://gitlab.gnome.org/GNOME/Incubator/resources). See [CHANGELOG](GPU-COMPARISON-CHANGELOG.md) for exact scope and checks.
 

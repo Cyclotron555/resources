@@ -1,6 +1,6 @@
 # Resources · GPU Comparison
 
-A side-by-side GPU view for comparing activity, VRAM, power and temperature, with actual model names and PCI addresses above each card. Built as a separate development copy; your installed Resources app stays intact.
+A side-by-side GPU view for comparing activity, VRAM, power and temperature, with actual model names and PCI addresses above each card. Distinct colors, a shared temperature range and synchronized scrolling make direct comparisons easier. Built as a separate development copy; your installed Resources app stays intact.
 
 ![Live RTX 3060 and GTX 1660 comparison](docs/screenshots/gpu-comparison.png)
 

@@ -1,7 +1,11 @@
 use adw::{prelude::*, subclass::prelude::*};
 use gtk::{gio, glib};
 use process_data::gpu_usage::GpuIdentifier;
-use std::{cell::RefCell, collections::HashMap};
+use std::{
+    cell::{Cell, RefCell},
+    collections::HashMap,
+    rc::Rc,
+};
 
 use super::{GPU_PRIMARY_ORD, gpu::ResGPU};
 use crate::i18n::i18n;
@@ -85,6 +89,12 @@ impl ResGPUComparison {
         let obj: Self = glib::Object::new();
         let columns = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         columns.set_homogeneous(true);
+        let colors = [
+            (0x35, 0x84, 0xe4),
+            (0x33, 0xd1, 0x7a),
+            (0xc0, 0x61, 0xcb),
+            (0xff, 0xa3, 0x48),
+        ];
         for (i, gpu) in gpus.iter().enumerate() {
             let column = gtk::Box::new(gtk::Orientation::Vertical, 6);
             column.set_size_request(340, -1);
@@ -101,7 +111,7 @@ impl ResGPUComparison {
             column.append(&identity);
             let panel = ResGPU::new();
             panel.init(gpu, i as u32);
-            panel.set_comparison_layout();
+            panel.set_comparison_layout(colors[i % colors.len()]);
             panel.set_vexpand(true);
             column.append(&panel);
             columns.append(&column);
@@ -109,6 +119,42 @@ impl ResGPUComparison {
                 .panels
                 .borrow_mut()
                 .insert(gpu.gpu_identifier(), panel);
+        }
+        let adjustments: Vec<_> = obj
+            .imp()
+            .panels
+            .borrow()
+            .values()
+            .map(|panel| {
+                panel
+                    .child()
+                    .and_downcast::<gtk::ScrolledWindow>()
+                    .unwrap()
+                    .vadjustment()
+            })
+            .collect();
+        let peers = Rc::new(
+            adjustments
+                .iter()
+                .map(|adjustment| adjustment.downgrade())
+                .collect::<Vec<_>>(),
+        );
+        let syncing = Rc::new(Cell::new(false));
+        for adjustment in adjustments {
+            let peers = peers.clone();
+            let syncing = syncing.clone();
+            adjustment.connect_value_changed(move |source| {
+                if syncing.get() {
+                    return;
+                }
+                syncing.set(true);
+                for peer in peers.iter().filter_map(|weak| weak.upgrade()) {
+                    if peer != *source {
+                        peer.set_value(source.value());
+                    }
+                }
+                syncing.set(false);
+            });
         }
         let scroll = gtk::ScrolledWindow::new();
         scroll.set_policy(gtk::PolicyType::Automatic, gtk::PolicyType::Never);
@@ -118,8 +164,21 @@ impl ResGPUComparison {
     }
 
     pub fn refresh_gpu(&self, data: &GpuData) {
-        if let Some(panel) = self.imp().panels.borrow().get(&data.gpu_identifier) {
+        let panels = self.imp().panels.borrow();
+        if let Some(panel) = panels.get(&data.gpu_identifier) {
             panel.refresh_page(data);
+        }
+        // A shared Celsius range keeps equal temperatures at equal graph heights.
+        let max_temperature = panels
+            .values()
+            .map(|panel| panel.imp().temperature.graph().get_highest_value())
+            .fold(100.0, f64::max);
+        for panel in panels.values() {
+            panel
+                .imp()
+                .temperature
+                .graph()
+                .set_locked_max_y(Some(max_temperature));
         }
     }
 }

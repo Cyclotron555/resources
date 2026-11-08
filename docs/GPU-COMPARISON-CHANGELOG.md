@@ -28,3 +28,13 @@ The separate Wan comparison finished before UI validation: RAM sampling 147.726s
 Visual testing covers this two-NVIDIA-card machine. The new layout follows detected-device order; headings provide stable identity without assuming GPU 1 or cuda:0 is the primary compute card. Per-card temperature charts auto-scale independently, so numeric temperature readings should be compared. More than two columns and narrow windows are supported by horizontal scrolling but have not been extensively tested. Hotplug handling is unchanged. The comparison's sidebar has no aggregate utilization graph, since averaging unrelated GPUs could mislead.
 
 Close and delete the separate local build to roll back; the distribution Resources app remains installed. Keep main/upstream unchanged and submit upstream only after separate review. Publication includes source, build scripts, help, screenshots, original license and this log; no binary portability claim is made.
+
+## 2026-11-08 — comparison polish
+
+- Assign comparison columns distinct blue/green/purple/orange chart colors, cycling after four cards. Names and PCI labels continue to identify hardware independently of color. Individual GPU pages and sidebar graphs retain upstream colors.
+- Give comparison temperature graphs a common Celsius range starting at 0–100, expanding together to include any higher value in the visible histories. Numeric temperature formatting still honors the user's unit preference. This supersedes the initial limitation about independent temperature ranges in comparison; original per-card pages retain automatic scales.
+- Synchronize vertical adjustments so scrolling either column keeps corresponding rows aligned. Weak references between adjustments avoid retaining closed pages; a reentrancy guard prevents signal loops. GTK clamps the value if cards have differing content heights. Horizontal scrolling still handles narrow views and additional GPUs.
+- Extend the documentation capture helper with opt-in live checks for a shared temperature range, different chart colors and two-way scroll synchronization. Scroll is returned to the top before the real screenshot is captured; no synthetic sensor readings are inserted.
+- All five Meson checks pass again. The compiled GTK comparison passed the opt-in live checks on both NVIDIA cards; the refreshed screenshot shows 34°C and 50°C at proportional graph heights. No generation benchmark or GPU load was needed for this UI change.
+
+Same feature branch and separate install prefix. Help, README and screenshot updated. No system GPU settings, packaged Resources binary or ComfyUI files changed.

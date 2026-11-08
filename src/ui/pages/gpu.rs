@@ -199,12 +199,16 @@ impl ResGPU {
         self.setup_widgets(gpu);
     }
 
-    pub fn set_comparison_layout(&self) {
+    pub fn set_comparison_layout(&self, color: (u8, u8, u8)) {
         let imp = self.imp();
         imp.encode_decode_usage.set_visible(false);
         imp.encode_decode_combined_usage.set_visible(false);
         imp.gpu_clockspeed.set_visible(false);
         imp.vram_clockspeed.set_visible(false);
+        let (r, g, b) = color;
+        imp.gpu_usage.graph().set_graph_color(r, g, b);
+        imp.vram_usage.graph().set_graph_color(r, g, b);
+        imp.temperature.graph().set_graph_color(r, g, b);
     }
 
     pub fn setup_widgets(&self, gpu: &Gpu) {

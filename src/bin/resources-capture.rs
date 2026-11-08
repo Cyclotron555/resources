@@ -3,6 +3,7 @@
 use adw::{prelude::*, subclass::prelude::*};
 use gtk::{gdk::prelude::PaintableExt, gio, glib};
 use resources::application::Application;
+use resources::ui::pages::gpu_comparison::ResGPUComparison;
 use std::time::Duration;
 
 fn main() {
@@ -28,6 +29,66 @@ fn main() {
             }
         }
     });
+    if std::env::var_os("RESOURCES_CAPTURE_VERIFY").is_some() {
+        glib::timeout_add_local_once(Duration::from_secs(4), || {
+            let app = gio::Application::default()
+                .unwrap()
+                .downcast::<Application>()
+                .unwrap();
+            let window = app.try_main_window().unwrap();
+            let toolbar = window
+                .imp()
+                .content_stack
+                .visible_child()
+                .unwrap()
+                .downcast::<adw::ToolbarView>()
+                .unwrap();
+            let comparison = toolbar
+                .content()
+                .unwrap()
+                .downcast::<ResGPUComparison>()
+                .unwrap();
+            let panels = comparison.imp().panels.borrow();
+            assert!(panels.len() >= 2);
+            let panels: Vec<_> = panels.values().collect();
+            let scale = panels[0].imp().temperature.graph().imp().max_y.get();
+            assert!(scale.unwrap() >= 100.0);
+            for panel in &panels {
+                assert_eq!(panel.imp().temperature.graph().imp().max_y.get(), scale);
+            }
+            assert_ne!(
+                panels[0].imp().gpu_usage.graph().imp().graph_color.get(),
+                panels[1].imp().gpu_usage.graph().imp().graph_color.get()
+            );
+            let adjustments: Vec<_> = panels
+                .iter()
+                .map(|panel| {
+                    panel
+                        .child()
+                        .and_downcast::<gtk::ScrolledWindow>()
+                        .unwrap()
+                        .vadjustment()
+                })
+                .collect();
+            let target = adjustments
+                .iter()
+                .map(|a| a.upper() - a.page_size())
+                .fold(64.0, f64::min);
+            assert!(target > 0.0);
+            adjustments[0].set_value(target);
+            for adjustment in &adjustments {
+                assert!((adjustment.value() - target).abs() < 1.0);
+            }
+            adjustments[1].set_value(target / 2.0);
+            for adjustment in &adjustments {
+                assert!((adjustment.value() - target / 2.0).abs() < 1.0);
+            }
+            adjustments[0].set_value(0.0);
+            eprintln!(
+                "Comparison checks passed: shared temperature range, distinct colors, synchronized scrolling"
+            );
+        });
+    }
     glib::timeout_add_local_once(Duration::from_secs(10), move || {
         let app = gio::Application::default()
             .unwrap()
