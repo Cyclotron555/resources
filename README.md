@@ -4,6 +4,10 @@ Resources was created by **[nokyan](https://github.com/nokyan)** and its contrib
 
 A side-by-side GPU view for comparing activity, VRAM, power and temperature, with actual model names and PCI addresses above each card. Distinct colors, a shared temperature range and synchronized scrolling make direct comparisons easier. Built as a separate development copy; your installed Resources app stays intact.
 
+## Tested with ComfyUI
+
+We used this view alongside **[ComfyUI](https://github.com/Comfy-Org/ComfyUI)** to monitor local **Wan 2.1 T2V 1.3B video generation**: RTX 3060 as primary compute/display, with GTX 1660 or system RAM holding offloaded weights through our **[ComfyUI-MultiGPU branch](https://github.com/Cyclotron555/ComfyUI-MultiGPU/tree/hardware/3060-primary-safe-offload)**. The matched test generated 512×288, 33-frame videos. Resources displays the resulting hardware activity; ComfyUI and its extension manage model loading, inference and offloading.
+
 ![Live RTX 3060 and GTX 1660 comparison](docs/screenshots/gpu-comparison.png)
 
 **[Build, run and help](docs/GPU-COMPARISON.md)** · **[Changes and validation](docs/GPU-COMPARISON-CHANGELOG.md)**

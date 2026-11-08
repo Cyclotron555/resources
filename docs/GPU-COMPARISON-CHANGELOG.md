@@ -42,3 +42,7 @@ Same feature branch and separate install prefix. Help, README and screenshot upd
 ## 2026-11-08 — public visibility and upstream credit
 
 GitHub repository visibility verified as public. Added prominent credit and direct links to original developer nokyan, the original GitHub repository, current GNOME GitLab upstream and official app page at the top of README and help. Preserved original credits/license and identified this as an independent Ubuntu-tested fork. No code or runtime changes.
+
+## 2026-11-08 — ComfyUI usage documented
+
+Added prominent Tested with ComfyUI sections to README and help, linking ComfyUI and our MultiGPU branch. Identified the actual Wan model/test size and RTX/GTX/RAM roles. Resources monitors activity; model loading and offloading belong to ComfyUI/MultiGPU. Documentation-only change.

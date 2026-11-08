@@ -6,6 +6,10 @@ Open **GPU Comparison** in the sidebar. Each card gets its own column, labeled w
 
 ![Two real NVIDIA cards in the comparison view](screenshots/gpu-comparison.png)
 
+## Tested with ComfyUI
+
+We used this view alongside **[ComfyUI](https://github.com/Comfy-Org/ComfyUI)** to monitor local **Wan 2.1 T2V 1.3B video generation**: RTX 3060 as primary compute/display, with GTX 1660 or system RAM holding offloaded weights through our **[ComfyUI-MultiGPU branch](https://github.com/Cyclotron555/ComfyUI-MultiGPU/tree/hardware/3060-primary-safe-offload)**. The matched test generated 512×288, 33-frame videos. Resources displays the resulting hardware activity; ComfyUI and its extension manage model loading, inference and offloading.
+
 ## Read the view
 
 - Each GPU has a distinct chart color; model and PCI labels also identify it.
