@@ -31,6 +31,7 @@ src/ui/pages/battery.rs
 src/ui/pages/cpu.rs
 src/ui/pages/drive.rs
 src/ui/pages/gpu.rs
+src/ui/pages/gpu_comparison.rs
 src/ui/pages/memory.rs
 src/ui/pages/mod.rs
 src/ui/pages/network.rs

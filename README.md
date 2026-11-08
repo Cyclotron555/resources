@@ -1,3 +1,15 @@
+# Resources · GPU Comparison
+
+A side-by-side GPU view for comparing activity, VRAM, power and temperature, with actual model names and PCI addresses above each card. Built as a separate development copy; your installed Resources app stays intact.
+
+![Live RTX 3060 and GTX 1660 comparison](docs/screenshots/gpu-comparison.png)
+
+**[Build, run and help](docs/GPU-COMPARISON.md)** · **[Changes and validation](docs/GPU-COMPARISON-CHANGELOG.md)**
+
+Independent GPL-3.0-or-later fork of Resources 1.10.2. Changes live on `feature/gpu-comparison`; this is not an upstream release. Original upstream documentation follows.
+
+---
+
 # ⚠️ Resources is now part of [GNOME Incubator](https://gitlab.gnome.org/GNOME/Incubator/resources)! All further development and discussion will happen on GNOME GitLab
 
 ---

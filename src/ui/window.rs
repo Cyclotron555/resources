@@ -30,6 +30,7 @@ use crate::utils::settings::SETTINGS;
 
 use super::pages::applications;
 use super::pages::gpu::ResGPU;
+use super::pages::gpu_comparison::ResGPUComparison;
 use super::pages::network::ResNetwork;
 use super::pages::npu::ResNPU;
 
@@ -105,6 +106,8 @@ mod imp {
 
         pub gpu_pages: RefCell<HashMap<GpuIdentifier, (Gpu, adw::ToolbarView)>>,
 
+        pub gpu_comparison: RefCell<Option<ResGPUComparison>>,
+
         pub npu_pages: RefCell<HashMap<PciSlot, (Npu, adw::ToolbarView)>>,
 
         pub apps_context: RefCell<AppsContext>,
@@ -143,6 +146,7 @@ mod imp {
                 receiver,
                 processor_window_title: TemplateChild::default(),
                 gpu_pages: RefCell::default(),
+                gpu_comparison: RefCell::default(),
                 npu_pages: RefCell::default(),
             }
         }
@@ -460,6 +464,15 @@ impl MainWindow {
 
     fn init_gpu_pages(self: &MainWindow, gpus: &[Gpu]) {
         let imp = self.imp();
+        if gpus.len() > 1 {
+            let comparison = ResGPUComparison::new(gpus);
+            self.add_page(
+                &comparison,
+                &i18n("GPU Comparison"),
+                &i18n("All graphics cards"),
+            );
+            imp.gpu_comparison.replace(Some(comparison));
+        }
 
         for (i, gpu) in gpus.iter().enumerate() {
             let page = ResGPU::new();
@@ -478,7 +491,7 @@ impl MainWindow {
                 self.add_page(&page, &tab_name, &tab_name)
             };
 
-            page.init(gpu, i as u32);
+            page.init(gpu, i as u32 + 1);
 
             imp.gpu_pages
                 .borrow_mut()
@@ -663,8 +676,11 @@ impl MainWindow {
          *  Gpu
          */
         let gpu_pages = imp.gpu_pages.borrow();
-        for ((_, page), mut gpu_data) in gpu_pages.values().zip(gpu_data) {
-            let page = page.content().and_downcast::<ResGPU>().unwrap();
+        for mut gpu_data in gpu_data {
+            let Some((_, toolbar)) = gpu_pages.get(&gpu_data.gpu_identifier) else {
+                continue;
+            };
+            let page = toolbar.content().and_downcast::<ResGPU>().unwrap();
 
             if !gpu_data.nvidia {
                 // for non-NVIDIA GPUs, we prefer getting the fractions from the processes because they represent the
@@ -715,6 +731,9 @@ impl MainWindow {
             }
 
             page.refresh_page(&gpu_data);
+            if let Some(comparison) = imp.gpu_comparison.borrow().as_ref() {
+                comparison.refresh_gpu(&gpu_data);
+            }
         }
 
         /*

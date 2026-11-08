@@ -199,6 +199,14 @@ impl ResGPU {
         self.setup_widgets(gpu);
     }
 
+    pub fn set_comparison_layout(&self) {
+        let imp = self.imp();
+        imp.encode_decode_usage.set_visible(false);
+        imp.encode_decode_combined_usage.set_visible(false);
+        imp.gpu_clockspeed.set_visible(false);
+        imp.vram_clockspeed.set_visible(false);
+    }
+
     pub fn setup_widgets(&self, gpu: &Gpu) {
         trace!(
             "Setting up ResGPU ({}, {}) widgets…",

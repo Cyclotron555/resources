@@ -9,6 +9,7 @@ pub mod battery;
 pub mod cpu;
 pub mod drive;
 pub mod gpu;
+pub mod gpu_comparison;
 pub mod memory;
 pub mod network;
 pub mod npu;
