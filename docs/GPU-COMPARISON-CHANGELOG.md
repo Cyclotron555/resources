@@ -38,3 +38,7 @@ Close and delete the separate local build to roll back; the distribution Resourc
 - All five Meson checks pass again. The compiled GTK comparison passed the opt-in live checks on both NVIDIA cards; the refreshed screenshot shows 34°C and 50°C at proportional graph heights. No generation benchmark or GPU load was needed for this UI change.
 
 Same feature branch and separate install prefix. Help, README and screenshot updated. No system GPU settings, packaged Resources binary or ComfyUI files changed.
+
+## 2026-11-08 — public visibility and upstream credit
+
+GitHub repository visibility verified as public. Added prominent credit and direct links to original developer nokyan, the original GitHub repository, current GNOME GitLab upstream and official app page at the top of README and help. Preserved original credits/license and identified this as an independent Ubuntu-tested fork. No code or runtime changes.

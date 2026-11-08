@@ -1,5 +1,7 @@
 # Compare your GPUs
 
+Resources was created by **[nokyan](https://github.com/nokyan)** and its contributors. This Ubuntu-tested fork builds on their work. **[Original repository](https://github.com/nokyan/resources)** · **[Current upstream development](https://gitlab.gnome.org/GNOME/Incubator/resources)** · **[Official app page](https://apps.gnome.org/app/net.nokyan.Resources/)**. This fork is independent and does not imply upstream or Ubuntu endorsement.
+
 Open **GPU Comparison** in the sidebar. Each card gets its own column, labeled with its actual model name and PCI address. The view appears when Resources detects at least two graphics cards and GPU monitoring is enabled. Your existing individual GPU pages remain available.
 
 ![Two real NVIDIA cards in the comparison view](screenshots/gpu-comparison.png)

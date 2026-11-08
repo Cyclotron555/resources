@@ -1,5 +1,7 @@
 # Resources · GPU Comparison
 
+Resources was created by **[nokyan](https://github.com/nokyan)** and its contributors. This Ubuntu-tested fork builds on their work. **[Original repository](https://github.com/nokyan/resources)** · **[Current upstream development](https://gitlab.gnome.org/GNOME/Incubator/resources)** · **[Official app page](https://apps.gnome.org/app/net.nokyan.Resources/)**. This fork is independent and does not imply upstream or Ubuntu endorsement.
+
 A side-by-side GPU view for comparing activity, VRAM, power and temperature, with actual model names and PCI addresses above each card. Distinct colors, a shared temperature range and synchronized scrolling make direct comparisons easier. Built as a separate development copy; your installed Resources app stays intact.
 
 ![Live RTX 3060 and GTX 1660 comparison](docs/screenshots/gpu-comparison.png)
